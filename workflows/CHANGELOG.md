@@ -18,6 +18,16 @@ for contributor and maintainer responsibilities.
 
 ### Changed
 
+- Action Recognition Model gains an `analyzed_until_frame` output: the source
+  index of the last frame a successful classification covered, null until the
+  first one. A consumer can tell "no action" from "not analyzed yet". Failed and
+  skipped windows do not advance it.
+- Action Recognition Model runs one extra classification on the last frame of a
+  video file that reports its frame count. The timeline on that frame covers
+  the tail of the clip, and a clip shorter than one stride now gets a result.
+  Live streams and files without a usable frame count behave as before, and
+  so does a file whose last frame the source drops (for example with
+  `max_fps`).
 - Action Recognition Model v1 runs under REMOTE step execution. The block
   keeps its per-video state and sends each window's model call to
   `/infer/action_recognition` as a short MPEG-4 clip. It reads the model's
